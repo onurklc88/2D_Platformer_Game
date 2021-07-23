@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool isGrounded;
     private bool canJump;
+    private bool isTouchingWall;
+    private bool isWallSliding;
 
 
     private int amountOfJumpsLeft;
@@ -26,11 +28,14 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 10.0f;
      public float JumpForce = 3.0f;
     public float groundCheckRadius;
+    public float wallCheckDistance;
+    public float wallSlideSpeed;
 
 
 
     public Transform groundCheck;
     public LayerMask WhatIsGround;
+    public Transform WallCheck;
 
 
 
@@ -53,6 +58,7 @@ public class PlayerController : MonoBehaviour
         CheckMovementDirection();
         CheckIfCanJump();
         UpdateAnimatons();
+        CheckIfWallSliding();
 
     }
     private void FixedUpdate()
@@ -62,10 +68,33 @@ public class PlayerController : MonoBehaviour
        
     }
 
+
+    private void CheckIfWallSliding()
+    {
+
+        if(isTouchingWall && !isGrounded && rb.velocity.y < 0)
+        {
+
+            isWallSliding = true;
+
+        }
+        else
+        {
+
+            isWallSliding = false;
+        }
+
+    }
+
+
+
+
+
     //cheking for wall or smh
     private void CheckSurrondings()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, WhatIsGround);
+        isTouchingWall = Physics2D.Raycast(WallCheck.position, transform.right, wallCheckDistance);
     }
 
     private void CheckIfCanJump()
@@ -163,6 +192,17 @@ public class PlayerController : MonoBehaviour
     {
         //taking to velocity of rb on y axis
         rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
+
+        if(isWallSliding)
+        {
+
+            if(rb.velocity.y < -wallSlideSpeed)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
+
+            }
+
+        }
        
     }
 
@@ -181,6 +221,7 @@ public class PlayerController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        Gizmos.DrawLine(WallCheck.position, new Vector3(WallCheck.position.x + wallCheckDistance, WallCheck.position.y, WallCheck.position.z));
     }
 
 
