@@ -230,35 +230,25 @@ public class PlayerController : MonoBehaviour
     private void ApplyMoment()
     {
 
-        if (isGrounded)
+
+
+
+           
+       if (!isGrounded && !isWallSliding && movementInputDirection == 0)
+        {
+
+            rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
+
+        }
+        else 
         {
             //taking to velocity of rb on y axis
             rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
 
 
         }
-         else if(!isGrounded && !isWallSliding && movementInputDirection != 0)
-        {
-
-            Vector2 forceToAdd = new Vector2(movementForceInAir * movementInputDirection, 0);
-            rb.AddForce(forceToAdd);
-
-            if(Mathf.Abs(rb.velocity.x) > movementSpeed)
-            {
-
-                rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
-
-            }
-
-
-
-        }
-        else if(!isGrounded && !isWallSliding && movementInputDirection == 0)
-        {
-
-            rb.velocity = new Vector2(rb.velocity.x * airDragMultiplier, rb.velocity.y);
-
-        }
+         
+    
        
        
 
