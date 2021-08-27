@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private bool canMove;
     private bool canFlip;
     private bool isDashing;
+    private bool HoldingGun;
 
     private int amountOfJumpsLeft;
     private int facingDirection = 1;
@@ -254,8 +255,11 @@ public class PlayerController : MonoBehaviour
         }
 
 
+       
 
-    }
+
+
+}
     private void AttemptToDash()
     {
         isDashing = true;
@@ -307,11 +311,18 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isGrounded", isGrounded);
         anim.SetFloat("yVelocity", rb.velocity.y);
         anim.SetBool("isWallSliding", isWallSliding);
+        anim.SetBool("HoldingGun", HoldingGun);
 
     }
 
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        HoldingGun = true;
 
+        
+    }
 
 
     private void CheckJump()
