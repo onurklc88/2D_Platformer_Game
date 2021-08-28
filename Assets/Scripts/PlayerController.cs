@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
     public float dashSpeed;
     public float distanceBetweenImages;
     public float dashCoolDown;
+    public int maxHealth = 100;
+    public int currentHealth;
 
 
     public Vector2 wallHopDirection;
@@ -65,6 +67,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public LayerMask WhatIsGround;
     public Transform WallCheck;
+    public HealthBar healthBar;
 
 
 
@@ -80,6 +83,9 @@ public class PlayerController : MonoBehaviour
         amountOfJumpsLeft = amountOfJumps;
         wallHopDirection.Normalize();
         wallJumpDirection.Normalize();
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+     
     }
 
     // Update is called once per frame
@@ -92,6 +98,14 @@ public class PlayerController : MonoBehaviour
         CheckIfWallSliding();
         CheckJump();
         CheckDash();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+
+            TakeDamage(20);
+        }
+
+
+
 
     }
     private void FixedUpdate()
@@ -240,6 +254,7 @@ public class PlayerController : MonoBehaviour
         {
             checkJumpMultiplier = false;
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
+           
 
         }
 
@@ -254,12 +269,28 @@ public class PlayerController : MonoBehaviour
 
         }
 
-
+        
        
 
 
 
 }
+
+
+
+    void TakeDamage(int damage)
+    {
+
+        currentHealth -= damage;
+
+        healthBar.SetHealth(currentHealth);
+
+    }
+   
+
+
+
+
     private void AttemptToDash()
     {
         isDashing = true;
