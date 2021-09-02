@@ -22,8 +22,8 @@ public class PlayerController : MonoBehaviour
     private bool checkJumpMultiplier;
     private bool canMove;
     private bool canFlip;
-    private bool isDashing;
     private bool HoldingGun;
+    private float isGunTaken;
 
     private int amountOfJumpsLeft;
     private int facingDirection = 1;
@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
     public float variableJumpHeightMultiplier = 0.5f;
     public float wallHopForce;
     public float wallJumpForce;
+    
     
     public int maxHealth = 100;
     public int currentHealth;
@@ -160,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
         }
        
-        //:3
+       
 
     }
 
@@ -198,7 +199,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
-
+            
 
         }
         if (Input.GetButtonUp("Jump"))
@@ -206,19 +207,18 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
 
         }
-        
 
-        /*
-        //jump higher when player holding space
-        if (checkJumpMultiplier && !Input.GetButton("Jump"))
+        if (Input.GetButtonDown("Drop"))
         {
-            checkJumpMultiplier = false;
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * variableJumpHeightMultiplier);
-           
+            Slot.Sl.DropItem();
+
+                   
+
 
         }
-        */
-}
+
+
+    }
 
 
 
@@ -338,7 +338,7 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded)
         {
-            ////////////////////////////////////////////////
+           
             rb.velocity = new Vector2(movementSpeed * movementInputDirection, rb.velocity.y);
 
         }
