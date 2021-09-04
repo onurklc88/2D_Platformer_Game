@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private float dashTimeLeft;
     private float lastImageXpos;
     private float lastDash = -100f;
+    public bool PistolTaken;
 
 
 
@@ -208,7 +209,16 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if (Input.GetButtonDown("Drop"))
+
+        if (PistolTaken && Input.GetKeyDown(KeyCode.Alpha1))
+        {
+
+            WeaponSwitch.gl.glock();
+            anim.SetBool("HoldingGun", HoldingGun);
+
+        }
+
+            if (Input.GetButtonDown("Drop"))
         {
             Slot.Sl.DropItem();
 
@@ -216,6 +226,9 @@ public class PlayerController : MonoBehaviour
 
 
         }
+
+        
+
 
 
     }
@@ -237,50 +250,15 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isGrounded", isGrounded);
         anim.SetFloat("yVelocity", rb.velocity.y);
         anim.SetBool("isWallSliding", isWallSliding);
-        anim.SetBool("HoldingGun", HoldingGun);
-        anim.SetFloat("Speed", Mathf.Abs(movementInputDirection));
+     anim.SetFloat("Speed", Mathf.Abs(movementInputDirection));
 
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        
-      
-
-        
-    }
+    
 
 
-    /*
-    private void CheckJump()
-    {
-        if (jumpTimer > 0)
-        {
-            //wallJump
-            if (!isGrounded && isTouchingWall && movementInputDirection != 0 && movementInputDirection != facingDirection)
-            {
-                WallJump();
-
-            }
-            else if (isGrounded)
-            {
-
-              Jump();
-            }
-
-
-        }
-        if (isAttemptingToJump)
-        {
-            jumpTimer -= Time.deltaTime;
-
-        }
-
-
-
-    }
-    */
+    
     private void Jump()
     {
         //taking to velocity of rb on x axis
@@ -310,30 +288,25 @@ public class PlayerController : MonoBehaviour
 
 
     }
-   
-    /*
-    private void WallJump()
+
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        if (canWallJump)
+        if(col.gameObject.tag == "glockPistol")
         {
-            rb.velocity = new Vector2(rb.velocity.x, 0.0f);
+            HoldingGun = true;
+            PistolTaken = true;
 
 
-            isWallSliding = false;
-            amountOfJumpsLeft = amountOfJumps;
-            amountOfJumpsLeft--;
-            Vector2 forceToAdd = new Vector2(wallJumpForce * wallJumpDirection.x * -facingDirection, wallHopForce * wallJumpDirection.y);
-            rb.AddForce(forceToAdd, ForceMode2D.Impulse);
-            jumpTimer = 0;
-            isAttemptingToJump = false;
-            checkJumpMultiplier = true;
+
         }
 
-    }
-    */
+        
+
+        }
+    
 
 
-    private void ApplyMoment()
+        private void ApplyMoment()
     {
 
         if (isGrounded)
