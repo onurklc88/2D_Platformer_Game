@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private bool canMove;
     private bool canFlip;
     private bool HoldingGun;
+    private bool pistolActive = false;
     private float isGunTaken;
 
     private int amountOfJumpsLeft;
@@ -209,16 +210,44 @@ public class PlayerController : MonoBehaviour
 
         }
 
-
-        if (PistolTaken && Input.GetKeyDown(KeyCode.Alpha1))
+        if (pistolActive == false)
         {
+            if (PistolTaken && Input.GetKeyDown(KeyCode.Alpha1))
+            {
 
-            WeaponSwitch.gl.glock();
-            anim.SetBool("HoldingGun", HoldingGun);
+                WeaponSwitch.gl.glock();
+                anim.SetBool("HoldingGun", HoldingGun);
+                pistolActive = true;
+            }
+            
+
+
+
+
+        }
+        else if (pistolActive == true){
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+
+                pistolActive = false;
+                WeaponSwitch.gl.glockInavtive();
+                anim.SetBool("HoldingGun", !HoldingGun);
+
+
+
+
+            }
+
+
+
 
         }
 
-            if (Input.GetButtonDown("Drop"))
+
+
+
+        if (Input.GetButtonDown("Drop"))
         {
             Slot.Sl.DropItem();
 
