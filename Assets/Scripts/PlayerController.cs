@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator anim;
+    
 
     private bool isFacingRight = true;
     private bool isGrounded;
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private bool HoldingGun;
     private bool pistolActive = false;
     private float isGunTaken;
+    private bool CrouchActive = false;
 
     private int amountOfJumpsLeft;
     private int facingDirection = 1;
@@ -35,12 +37,11 @@ public class PlayerController : MonoBehaviour
     private float lastImageXpos;
     private float lastDash = -100f;
     public bool PistolTaken;
-
-
-
-
-
     private float movementInputDirection;
+
+
+
+    
     public float movementSpeed = 10.0f;
     public float JumpForce = 3.0f;
     public float groundCheckRadius;
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 wallJumpDirection;
 
 
-
+    public BoxCollider2D player;
     public Transform groundCheck;
     public LayerMask WhatIsGround;
     public Transform WallCheck;
@@ -85,7 +86,7 @@ public class PlayerController : MonoBehaviour
         wallJumpDirection.Normalize();
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
-        
+        player = player.GetComponent<BoxCollider2D>();
         
      
     }
@@ -233,7 +234,7 @@ public class PlayerController : MonoBehaviour
                 pistolActive = false;
                 WeaponSwitch.gl.glockInavtive();
                 anim.SetBool("HoldingGun", !HoldingGun);
-
+                
 
 
 
@@ -244,14 +245,39 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        if (isGrounded && !isWallSliding) {
 
+            if (Input.GetButton("Crouch"))
+            {
+                CrouchActive = true;
+                player.size = new Vector2(0.4395781f, 0.8f);
+                player.offset = new Vector2(0.0002865791f, -0.2f);
+
+
+
+
+            }
+            else if (CrouchActive = true && isGrounded && !isWallSliding)
+            {
+                if (Input.GetButtonUp("Crouch"))
+                {
+                    CrouchActive = false;
+                    player.size = new Vector2(0.4395781f, 1.25598f);
+                    player.offset = new Vector2(0.0002865791f, 0.001142859f);
+
+
+                }
+
+
+            }
+        }
 
 
         if (Input.GetButtonDown("Drop"))
         {
             Slot.Sl.DropItem();
 
-                   
+          
 
 
         }
