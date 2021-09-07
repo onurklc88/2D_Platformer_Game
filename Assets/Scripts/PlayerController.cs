@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private bool pistolActive = false;
     private float isGunTaken;
     private bool CrouchActive = false;
+    private bool CrouchAnim;
 
     private int amountOfJumpsLeft;
     private int facingDirection = 1;
@@ -245,14 +246,15 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if (isGrounded && !isWallSliding) {
+       if (isGrounded && !isWallSliding) {
 
             if (Input.GetButton("Crouch"))
             {
                 CrouchActive = true;
                 player.size = new Vector2(0.4395781f, 0.8f);
                 player.offset = new Vector2(0.0002865791f, -0.2f);
-
+                CrouchAnim = true;
+                
 
 
 
@@ -264,14 +266,14 @@ public class PlayerController : MonoBehaviour
                     CrouchActive = false;
                     player.size = new Vector2(0.4395781f, 1.25598f);
                     player.offset = new Vector2(0.0002865791f, 0.001142859f);
-
+                    CrouchAnim = false;
 
                 }
 
 
             }
         }
-
+        
 
         if (Input.GetButtonDown("Drop"))
         {
@@ -306,6 +308,20 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("yVelocity", rb.velocity.y);
         anim.SetBool("isWallSliding", isWallSliding);
      anim.SetFloat("Speed", Mathf.Abs(movementInputDirection));
+
+
+
+        //crouch anim without weapon
+        if(CrouchActive == true)
+        {
+           
+            anim.SetBool("Crouch", CrouchAnim);
+
+        }
+
+
+
+
 
     }
 
