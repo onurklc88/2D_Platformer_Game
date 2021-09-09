@@ -254,7 +254,7 @@ public class PlayerController : MonoBehaviour
                 player.size = new Vector2(0.4395781f, 0.8f);
                 player.offset = new Vector2(0.0002865791f, -0.2f);
                 CrouchAnim = true;
-                
+                movementSpeed = 3.0f;
 
 
 
@@ -267,7 +267,7 @@ public class PlayerController : MonoBehaviour
                     player.size = new Vector2(0.4395781f, 1.25598f);
                     player.offset = new Vector2(0.0002865791f, 0.001142859f);
                     CrouchAnim = false;
-
+                    movementSpeed = 10.0f;
                 }
 
 
