@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private float lastDash = -100f;
     public bool PistolTaken;
     private float movementInputDirection;
+    
 
 
 
@@ -62,7 +63,8 @@ public class PlayerController : MonoBehaviour
     public Vector2 wallHopDirection;
     public Vector2 wallJumpDirection;
 
-
+    public GameObject arm1;
+    public GameObject arm2;
     public BoxCollider2D player;
     public Transform groundCheck;
     public LayerMask WhatIsGround;
@@ -100,8 +102,7 @@ public class PlayerController : MonoBehaviour
         CheckIfCanJump();
         UpdateAnimatons();
         CheckIfWallSliding();
-        
-       
+        WhileCrouching();
 
 
 
@@ -255,14 +256,18 @@ public class PlayerController : MonoBehaviour
                 player.offset = new Vector2(0.0002865791f, -0.2f);
                 CrouchAnim = true;
                 movementSpeed = 3.0f;
-
-
+          
+                
+              
 
             }
+           
+
             else if (CrouchActive = true && isGrounded && !isWallSliding)
             {
                 if (Input.GetButtonUp("Crouch"))
                 {
+                   
                     CrouchActive = false;
                     player.size = new Vector2(0.4395781f, 1.25598f);
                     player.offset = new Vector2(0.0002865791f, 0.001142859f);
@@ -449,7 +454,28 @@ public class PlayerController : MonoBehaviour
 
 
 
+    void WhileCrouching()
+    {
 
+        if (Input.GetButtonDown("Crouch"))
+        {
+
+           arm1.transform.position = new Vector2(arm1.transform.position.x, arm1.transform.position.y - 0.3f);
+           arm2.transform.position = new Vector2(arm2.transform.position.x, arm2.transform.position.y - 0.3f);
+            
+            
+
+        }else if (Input.GetButtonUp("Crouch"))
+        {
+
+            arm1.transform.position = new Vector2(arm1.transform.position.x, arm1.transform.position.y + 0.3f);
+            arm2.transform.position = new Vector2(arm2.transform.position.x, arm2.transform.position.y + 0.3f);
+
+        }
+
+
+
+    }
 
 
 
