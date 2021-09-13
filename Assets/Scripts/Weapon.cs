@@ -110,16 +110,21 @@ public class Weapon : MonoBehaviour
 
             BulletRemainder = maxAmmo - currrentAmmo;
             currrentAmmo = currrentAmmo + BulletRemainder;
+            
 
             if ((magazineSize - BulletRemainder) > 0)
             {
 
                 magazineSize = magazineSize - BulletRemainder;
-
+                
 
             }
-            
-                    
+            if(magazineSize == BulletRemainder)
+            {
+                magazineSize = 0;
+
+            }
+                   
                     
                     
 
