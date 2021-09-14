@@ -13,6 +13,8 @@ public class Weapon : MonoBehaviour
     public float effectSpawnRate = 10;
     public float reloadTime = 2f;
 
+
+    public bool canShoot = true;
     private bool isReloading;
     public int currrentAmmo;
     public int maxAmmo = 10;
@@ -61,14 +63,7 @@ public class Weapon : MonoBehaviour
         ammoInfoText.text = currentGun.currrentAmmo + " / " + currentGun.magazineSize;
 
 
-     if(currrentAmmo == 0 && !isReloading)
-        {
-
-           
-        }
-
-
-
+   
 
         if (fireRate == 0)
         {
@@ -103,35 +98,50 @@ public class Weapon : MonoBehaviour
 
     public void ReloadSystem()
     {
-
-        if (magazineSize > 0 && currrentAmmo > 0)
+        if (Input.GetButtonDown("Reload"))
         {
 
-
-            BulletRemainder = maxAmmo - currrentAmmo;
-            currrentAmmo = currrentAmmo + BulletRemainder;
-            
-
-            if ((magazineSize - BulletRemainder) > 0)
+            if (currrentAmmo > 0 && magazineSize > 0)
             {
 
-                magazineSize = magazineSize - BulletRemainder;
+
+                BulletRemainder = maxAmmo - currrentAmmo;
+                currrentAmmo = currrentAmmo + BulletRemainder;
+                
+                    magazineSize = magazineSize - BulletRemainder;
                 
 
             }
-            if(magazineSize == BulletRemainder)
+            else if (currrentAmmo == 0)
             {
-                magazineSize = 0;
 
-            }
+
+
+                if (magazineSize >= maxAmmo)
+                {
+                    currrentAmmo = maxAmmo;
+                    magazineSize -= maxAmmo;
                    
-                    
-                    
+
+                }
+                else
+                {
+
+                    currrentAmmo = magazineSize;
+                    magazineSize = 0;
 
 
-
-
+                }
+              
             }
+
+
+           
+
+
+
+
+        }
 
 
 
@@ -150,7 +160,7 @@ public class Weapon : MonoBehaviour
     {
         if (currrentAmmo > 0)
         {
-
+            
 
 
 
@@ -168,16 +178,18 @@ public class Weapon : MonoBehaviour
         else if(currrentAmmo == 0)
         {
 
+            
+
             if (magazineSize >= maxAmmo)
             {
                 currrentAmmo = maxAmmo;
                 magazineSize -= maxAmmo;
-
+                
 
             }
             else
             {
-
+                
                 currrentAmmo = magazineSize;
                 magazineSize = 0;
 
