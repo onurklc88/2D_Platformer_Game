@@ -12,22 +12,23 @@ public class Weapon : MonoBehaviour
     public float timeToSpawnEffect;
     public float effectSpawnRate = 10;
     public float reloadTime = 2f;
+    
 
 
-    public bool canShoot = true;
     private bool isReloading;
     public int currrentAmmo;
     public int maxAmmo = 10;
     public int magazineSize = 30;
     public int BulletRemainder;
-
+    private bool glockShooting;
 
     public static Weapon WeaponScript;
     public TextMeshProUGUI ammoInfoText;
     Transform firePoint;
+    
     public LayerMask whatToHit;
     public Transform BulletTrailPrefab;
-
+    private Animator anim;
 
     void Awake()
     {
@@ -37,13 +38,13 @@ public class Weapon : MonoBehaviour
 
         firePoint = transform.Find("FirePoint");
 
-        if(firePoint == null)
+        if (firePoint == null)
         {
             Debug.LogError("Anayin Amii");
 
 
         }
-
+      
 
 
 
@@ -51,6 +52,7 @@ public class Weapon : MonoBehaviour
 
     private void Start()
     {
+        anim = GetComponent<Animator>();
         currrentAmmo = maxAmmo;
     }
 
@@ -62,90 +64,135 @@ public class Weapon : MonoBehaviour
         Weapon currentGun = FindObjectOfType<Weapon>();
         ammoInfoText.text = currentGun.currrentAmmo + " / " + currentGun.magazineSize;
 
+        
 
-   
+
+
 
         if (fireRate == 0)
         {
 
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && currrentAmmo != 0)
+            {
+                glockShooting = true;
+                anim.SetBool("glockShooting", glockShooting);
+                CinemachineShake.Instance.ShakeCamera(4f, .1f);
+                Shoot();
+                
+
+            }
+            else if (Input.GetMouseButtonUp(0) && currrentAmmo != 0)
             {
 
+                glockShooting = false;
+                anim.SetBool("glockShooting", glockShooting);
+
+            }
+            else if (Input.GetMouseButtonDown(0) && currrentAmmo == 0)
+            {
+                CinemachineShake.Instance.ShakeCamera(0f, 0f);
                 Shoot();
-               
+                
             }
 
         }
 
         else
         {
-            if(Input.GetMouseButton(0) && Time.time > timeToFire)
+            if (Input.GetMouseButton(0) && Time.time > timeToFire)
             {
 
                 timeToFire = Time.time + 1 / fireRate;
                 Shoot();
-
+               
             }
 
 
 
 
         }
-     
-
     }
+    
 
+   
 
     public void ReloadSystem()
     {
-        if (Input.GetButtonDown("Reload"))
+
+
+
+
+        if (currrentAmmo > 0 && (magazineSize - BulletRemainder) > 0 && magazineSize >= 5)
         {
 
-            if (currrentAmmo > 0 && magazineSize > 0)
+
+            BulletRemainder = maxAmmo - currrentAmmo;
+            currrentAmmo = currrentAmmo + BulletRemainder;
+            magazineSize = magazineSize - BulletRemainder;
+
+            
+
+        }
+        else if (currrentAmmo == 0)
+        {
+
+
+
+            if (magazineSize >= maxAmmo)
+            {
+                currrentAmmo = maxAmmo;
+                magazineSize -= maxAmmo;
+
+             
+            }
+            else
             {
 
-
-                BulletRemainder = maxAmmo - currrentAmmo;
-                currrentAmmo = currrentAmmo + BulletRemainder;
-                
-                    magazineSize = magazineSize - BulletRemainder;
+                currrentAmmo = magazineSize;
+                magazineSize = 0;
                 
 
             }
-            else if (currrentAmmo == 0)
+
+        }
+
+
+        if ((magazineSize - BulletRemainder) < 0)
+        {
+            
+            currrentAmmo = currrentAmmo + magazineSize;
+            if(currrentAmmo > maxAmmo)
             {
+                magazineSize = currrentAmmo - maxAmmo;
+                currrentAmmo = maxAmmo;
+                
 
+            }
+            else if(magazineSize <= 5 && currrentAmmo != maxAmmo)
+            {
+                Debug.Log(currrentAmmo);
+                Debug.Log(magazineSize);
+                
+                magazineSize = 0;
 
-
-                if (magazineSize >= maxAmmo)
-                {
-                    currrentAmmo = maxAmmo;
-                    magazineSize -= maxAmmo;
-                   
-
-                }
-                else
-                {
-
-                    currrentAmmo = magazineSize;
-                    magazineSize = 0;
-
-
-                }
               
+
             }
-
-
-           
+            
 
 
 
 
         }
+       
 
 
 
-        }
+    }
+
+    
+
+        
       
 
 
@@ -160,14 +207,14 @@ public class Weapon : MonoBehaviour
     {
         if (currrentAmmo > 0)
         {
+
+
             
-
-
-
             Vector2 mousePosition = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
             Vector2 firePointPosition = new Vector2(firePoint.position.x, firePoint.position.y);
             RaycastHit2D hit = Physics2D.Raycast(firePointPosition, mousePosition - firePointPosition, 100, whatToHit);
             currrentAmmo--;
+         
             if (Time.time >= timeToSpawnEffect)
             {
                 Effect();
@@ -211,8 +258,7 @@ public class Weapon : MonoBehaviour
 
 
     }
-
-
+  
 }
 
      
