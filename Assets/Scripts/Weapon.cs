@@ -23,6 +23,7 @@ public class Weapon : MonoBehaviour
     private bool glockShooting;
 
     public static Weapon WeaponScript;
+    public Transform pistolFire;
     public TextMeshProUGUI ammoInfoText;
     Transform firePoint;
     
@@ -54,6 +55,7 @@ public class Weapon : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         currrentAmmo = maxAmmo;
+        
     }
 
     // Update is called once per frame
@@ -77,22 +79,23 @@ public class Weapon : MonoBehaviour
                 glockShooting = true;
                 anim.SetBool("glockShooting", glockShooting);
                 CinemachineShake.Instance.ShakeCamera(4f, .1f);
-                Shoot();
                 
+                Shoot();
+               
 
             }
             else if (Input.GetMouseButtonUp(0) && currrentAmmo != 0)
             {
-
+               
                 glockShooting = false;
                 anim.SetBool("glockShooting", glockShooting);
-
+                
             }
             else if (Input.GetMouseButtonDown(0) && currrentAmmo == 0)
             {
                 CinemachineShake.Instance.ShakeCamera(0f, 0f);
                 Shoot();
-                
+               
             }
 
         }
@@ -214,6 +217,7 @@ public class Weapon : MonoBehaviour
             Vector2 firePointPosition = new Vector2(firePoint.position.x, firePoint.position.y);
             RaycastHit2D hit = Physics2D.Raycast(firePointPosition, mousePosition - firePointPosition, 100, whatToHit);
             currrentAmmo--;
+            
          
             if (Time.time >= timeToSpawnEffect)
             {
@@ -254,8 +258,13 @@ public class Weapon : MonoBehaviour
     void Effect()
     {
         Instantiate(BulletTrailPrefab, firePoint.position, firePoint.rotation);
+        Transform clone = Instantiate(pistolFire, firePoint.position, firePoint.rotation) as Transform;
+        clone.parent = firePoint;
+        float size = Random.Range(4f, 1.97f);
 
-
+        clone.localScale = new Vector3(3f, 3f, size);
+        
+        Destroy(clone.gameObject, 0.02f);
 
     }
   
