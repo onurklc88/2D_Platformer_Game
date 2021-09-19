@@ -21,10 +21,12 @@ public class Weapon : MonoBehaviour
     public int magazineSize = 30;
     public int BulletRemainder;
     private bool glockShooting;
+   
 
     public static Weapon WeaponScript;
     public Transform pistolFire;
     public TextMeshProUGUI ammoInfoText;
+    
     Transform firePoint;
     
     public LayerMask whatToHit;
@@ -66,20 +68,22 @@ public class Weapon : MonoBehaviour
         Weapon currentGun = FindObjectOfType<Weapon>();
         ammoInfoText.text = currentGun.currrentAmmo + " / " + currentGun.magazineSize;
 
-        
+
+      
 
 
 
-
-        if (fireRate == 0)
+            if (fireRate == 0)
         {
 
             if (Input.GetMouseButtonDown(0) && currrentAmmo != 0)
             {
+                
                 glockShooting = true;
+                
                 anim.SetBool("glockShooting", glockShooting);
                 CinemachineShake.Instance.ShakeCamera(4f, .1f);
-                
+               
                 Shoot();
                
 
@@ -88,15 +92,20 @@ public class Weapon : MonoBehaviour
             {
                
                 glockShooting = false;
+               
                 anim.SetBool("glockShooting", glockShooting);
                 
+
             }
             else if (Input.GetMouseButtonDown(0) && currrentAmmo == 0)
             {
                 CinemachineShake.Instance.ShakeCamera(0f, 0f);
                 Shoot();
                
+                
+               
             }
+            
 
         }
 
@@ -235,8 +244,8 @@ public class Weapon : MonoBehaviour
             {
                 currrentAmmo = maxAmmo;
                 magazineSize -= maxAmmo;
-                
 
+            
             }
             else
             {
