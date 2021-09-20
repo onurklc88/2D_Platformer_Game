@@ -11,22 +11,24 @@ public class Weapon : MonoBehaviour
     public float timeToFire = 0;
     public float timeToSpawnEffect;
     public float effectSpawnRate = 10;
-    public float reloadTime = 2f;
+    public float reloadTime = 1f;
     
 
 
     private bool isReloading;
+    
     public int currrentAmmo;
     public int maxAmmo = 10;
     public int magazineSize = 30;
     public int BulletRemainder;
     private bool glockShooting;
+    private bool ReloadAnim;
    
 
     public static Weapon WeaponScript;
     public Transform pistolFire;
     public TextMeshProUGUI ammoInfoText;
-    
+    public GameObject ReloadSprite;
     Transform firePoint;
     
     public LayerMask whatToHit;
@@ -64,28 +66,37 @@ public class Weapon : MonoBehaviour
     void Update()
     {
 
+       
+
+
+
 
         Weapon currentGun = FindObjectOfType<Weapon>();
         ammoInfoText.text = currentGun.currrentAmmo + " / " + currentGun.magazineSize;
 
 
-      
+        if (isReloading)
+            return;
 
 
 
-            if (fireRate == 0)
+        if (fireRate == 0)
         {
 
             if (Input.GetMouseButtonDown(0) && currrentAmmo != 0)
             {
-                
+
+
+
+               
+
                 glockShooting = true;
                 
                 anim.SetBool("glockShooting", glockShooting);
                 CinemachineShake.Instance.ShakeCamera(4f, .1f);
                
                 Shoot();
-               
+                
 
             }
             else if (Input.GetMouseButtonUp(0) && currrentAmmo != 0)
@@ -132,17 +143,22 @@ public class Weapon : MonoBehaviour
     {
 
 
-
+        
 
         if (currrentAmmo > 0 && (magazineSize - BulletRemainder) > 0 && magazineSize >= 5)
         {
 
-
+            
             BulletRemainder = maxAmmo - currrentAmmo;
             currrentAmmo = currrentAmmo + BulletRemainder;
             magazineSize = magazineSize - BulletRemainder;
+           
 
-            
+            StartCoroutine(ReloadAction());
+           
+        
+            return;
+
 
         }
         else if (currrentAmmo == 0)
@@ -152,17 +168,21 @@ public class Weapon : MonoBehaviour
 
             if (magazineSize >= maxAmmo)
             {
+                
+                anim.SetBool("isReloading", ReloadAnim);
                 currrentAmmo = maxAmmo;
                 magazineSize -= maxAmmo;
+                StartCoroutine(ReloadAction());
+                return;
 
-             
             }
             else
             {
 
                 currrentAmmo = magazineSize;
                 magazineSize = 0;
-                
+                StartCoroutine(ReloadAction());
+                return;
 
             }
 
@@ -177,7 +197,8 @@ public class Weapon : MonoBehaviour
             {
                 magazineSize = currrentAmmo - maxAmmo;
                 currrentAmmo = maxAmmo;
-                
+                StartCoroutine(ReloadAction());
+                return;
 
             }
             else if(magazineSize <= 5 && currrentAmmo != maxAmmo)
@@ -186,8 +207,9 @@ public class Weapon : MonoBehaviour
                 Debug.Log(magazineSize);
                 
                 magazineSize = 0;
+                StartCoroutine(ReloadAction());
+                return;
 
-              
 
             }
             
@@ -244,21 +266,24 @@ public class Weapon : MonoBehaviour
             {
                 currrentAmmo = maxAmmo;
                 magazineSize -= maxAmmo;
+                StartCoroutine(ReloadAction());
+                return;
+                
 
-            
+
+
             }
             else
             {
                 
                 currrentAmmo = magazineSize;
                 magazineSize = 0;
-
-
+                
             }
 
         }
 
-
+       
 
         
 
@@ -276,7 +301,32 @@ public class Weapon : MonoBehaviour
         Destroy(clone.gameObject, 0.02f);
 
     }
-  
+
+    IEnumerator ReloadAction()
+    {
+
+        isReloading = true;
+       
+        Debug.Log("Reloading..");
+        ReloadSprite.SetActive(true);
+      anim.SetBool("isReloading", true);
+        yield return new WaitForSeconds(reloadTime - 1f);
+        Debug.Log(reloadTime);
+        ReloadSprite.SetActive(false);
+        anim.SetBool("isReloading", false);
+        
+
+        isReloading = false;
+       
+        
+
+      
+
+    }
+
+   
+
+
 }
 
      
