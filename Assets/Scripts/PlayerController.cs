@@ -28,6 +28,9 @@ public class PlayerController : MonoBehaviour
     private float isGunTaken;
     private bool CrouchActive = false;
     private bool CrouchAnim;
+    private bool isReloading;
+
+
 
     private int amountOfJumpsLeft;
     private int facingDirection = 1;
@@ -38,7 +41,7 @@ public class PlayerController : MonoBehaviour
     private float lastImageXpos;
     private float lastDash = -100f;
     public bool PistolTaken;
-    private float movementInputDirection;
+   private float movementInputDirection;
     
 
 
@@ -66,11 +69,13 @@ public class PlayerController : MonoBehaviour
     public GameObject arm1;
     public GameObject arm2;
     public BoxCollider2D player;
+    public GameObject MainChar;
     public Transform groundCheck;
     public LayerMask WhatIsGround;
     public Transform WallCheck;
     public HealthBar healthBar;
     Transform playerGraphics;
+   
 
 
    
@@ -90,7 +95,7 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         player = player.GetComponent<BoxCollider2D>();
-        
+     
      
     }
 
@@ -252,11 +257,11 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButton("Crouch"))
             {
                 CrouchActive = true;
-                player.size = new Vector2(0.4395781f, 0.8f);
-                player.offset = new Vector2(0.0002865791f, -0.2f);
+                player.size = new Vector2(0.3045158f, 0.5429835f);
+                player.offset = new Vector2(0.0002861023f, -0.1458275f);
                 CrouchAnim = true;
                 movementSpeed = 3.0f;
-          
+             
                 
               
 
@@ -269,8 +274,9 @@ public class PlayerController : MonoBehaviour
                 {
                    
                     CrouchActive = false;
-                    player.size = new Vector2(0.4395781f, 1.25598f);
-                    player.offset = new Vector2(0.0002865791f, 0.001142859f);
+                    player.size = new Vector2(0.3045158f, 0.8323183f);
+                    player.offset = new Vector2(0.0002861023f, 0.0002861023f);
+                    
                     CrouchAnim = false;
                     movementSpeed = 10.0f;
                 }
@@ -278,19 +284,13 @@ public class PlayerController : MonoBehaviour
 
             }
         }
-        
-
-        if (Input.GetButtonDown("Drop"))
+        if (Input.GetButtonDown("Reload"))
         {
-            Slot.Sl.DropItem();
 
-          
-
+            Weapon.WeaponScript.ReloadSystem();
+            
 
         }
-
-        
-
 
 
     }
@@ -313,18 +313,18 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("yVelocity", rb.velocity.y);
         anim.SetBool("isWallSliding", isWallSliding);
      anim.SetFloat("Speed", Mathf.Abs(movementInputDirection));
-
+        
 
 
         //crouch anim without weapon
-        if(CrouchActive == true)
+        if (CrouchActive == true)
         {
            
             anim.SetBool("Crouch", CrouchAnim);
 
         }
 
-
+       
 
 
 
@@ -460,16 +460,16 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Crouch"))
         {
 
-           arm1.transform.position = new Vector2(arm1.transform.position.x, arm1.transform.position.y - 0.3f);
-           arm2.transform.position = new Vector2(arm2.transform.position.x, arm2.transform.position.y - 0.3f);
+           arm1.transform.position = new Vector2(arm1.transform.position.x, arm1.transform.position.y - 0.2f);
+           arm2.transform.position = new Vector2(arm2.transform.position.x, arm2.transform.position.y - 0.2f);
             
             
 
         }else if (Input.GetButtonUp("Crouch"))
         {
 
-            arm1.transform.position = new Vector2(arm1.transform.position.x, arm1.transform.position.y + 0.3f);
-            arm2.transform.position = new Vector2(arm2.transform.position.x, arm2.transform.position.y + 0.3f);
+            arm1.transform.position = new Vector2(arm1.transform.position.x, arm1.transform.position.y + 0.2f);
+            arm2.transform.position = new Vector2(arm2.transform.position.x, arm2.transform.position.y + 0.2f);
 
         }
 
@@ -480,7 +480,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    private void OnDrawGizmos()
+    public void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         Gizmos.DrawLine(WallCheck.position, new Vector3(WallCheck.position.x + wallCheckDistance, WallCheck.position.y, WallCheck.position.z));
