@@ -34,6 +34,7 @@ public class Enemy_behaviour : MonoBehaviour
     {
         if(inRange)
         {
+
             hit = Physics2D.Raycast(rayCast.position, Vector2.left, rayCastLength, raycastMask);
             RaycastDebugger();
 
@@ -55,7 +56,8 @@ public class Enemy_behaviour : MonoBehaviour
 
         if(inRange == false)
         {
-
+            anim.SetBool("canWalk", false);
+            StopAttack();
           
         }
 
@@ -91,8 +93,6 @@ public class Enemy_behaviour : MonoBehaviour
         }
 
 
-
-
     }
 
     void EnemyLogic()
@@ -103,22 +103,61 @@ public class Enemy_behaviour : MonoBehaviour
         if(distance > attackDistance)
         {
             Move();
-            
-            
+            StopAttack();
+            //methiewwashere
 
         }
         else if (attackDistance >= distance && cooling == false)
         {
-            anim.SetBool("Attack", false);
+
+            Attack();
             
+            
+
+        }
+        if (cooling)
+        {
+
+            anim.SetBool("Attack", false);
         }
 
     }
     void Move()
     {
+        anim.SetBool("canWalk", true);
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("PatrolAI_attack"))
+        {
+            Vector2 targetposition = new Vector2(target.transform.position.x, transform.position.y);
+            transform.position = Vector2.MoveTowards(transform.position, targetposition, moveSpeed * Time.deltaTime);
 
+
+
+
+        }
       
 
     }
+
+    void Attack()
+    {
+
+        timer = intTimer; //reset timer when players enter attack range
+        attackMode = true; //to check if enemy can still attack or not
+        anim.SetBool("Attack", true);
+        anim.SetBool("canWalk", false);
+    }
+
+    void StopAttack()
+    {
+        cooling = false;
+        attackMode = false;
+        anim.SetBool("Attack", false);
+        
+
+
+    }
+
+
+
 
 }
